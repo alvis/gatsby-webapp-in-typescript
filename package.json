@@ -1,0 +1,103 @@
+{
+  "name": "barebone-gatsby-in-typescript",
+  "version": "1.0.0",
+  "description": "Barebone for a modern app with Gatsby, React, PostCSS and Typescript",
+  "scripts": {
+    "build": "run-s clean lint test build:*",
+    "build:gatsby": "node_modules/.bin/babel-node --presets @babel/preset-env --presets @babel/preset-typescript --extensions '.ts,.tsx' node_modules/.bin/gatsby build",
+    "clean": "shx rm -rf .cache public",
+    "codegen": "graphql codegen",
+    "lint": "tslint --project tsconfig.json --config tslint.json",
+    "postinstall2": "npm run init",
+    "start": "node_modules/.bin/babel-node --presets @babel/preset-env --presets @babel/preset-typescript --extensions '.ts,.tsx' node_modules/.bin/gatsby develop",
+    "test": "jest --passWithNoTests"
+  },
+  "jest": {
+    "bail": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "(specs|src)/**/*.ts?(x)"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 95,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    },
+    "globals": {
+      "ignoreCoverageForAllDecorators": true,
+      "ts-jest": {
+        "tsConfig": {
+          "allowJs": true
+        }
+      }
+    },
+    "moduleNameMapper": {
+      "#(.*)": "<rootDir>/src/$1"
+    },
+    "preset": "ts-jest",
+    "resetModules": true,
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/specs/"
+    ],
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.jsx?$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(gatsby)/)"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvis/barebone-gatsby-in-typescript.git"
+  },
+  "keywords": [
+    "gatsby",
+    "boilerplate",
+    "typescript"
+  ],
+  "author": "Alvis HT Tang <alvis@hilbert.space>",
+  "contributors": [
+    "Alvis HT Tang <alvis@hilbert.space>"
+  ],
+  "maintainers": [
+    "Alvis HT Tang <alvis@hilbert.space>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alvis/barebone-gatsby-in-typescript/issues"
+  },
+  "homepage": "https://github.com/alvis/barebone-gatsby-in-typescript#readme",
+  "dependencies": {
+    "core-js": "^2.5.0",
+    "react": "^16.5.0",
+    "react-dom": "^16.5.0",
+    "react-helmet": "^5.2.0"
+  },
+  "devDependencies": {
+    "@babel/node": "^7.0.0",
+    "@babel/preset-typescript": "^7.0.0",
+    "@types/jest": "^23.3.0",
+    "@types/react": "^16.4.0",
+    "@types/react-helmet": "^5.0.0",
+    "@types/webpack": "^4.4.0",
+    "@types/webpack-bundle-analyzer": "^2.0.0",
+    "apollo": "^1.9.0",
+    "babel-plugin-module-resolver": "^3.1.0",
+    "gatsby": "next",
+    "gatsby-plugin-typescript": "next",
+    "jest": "^23.5.0",
+    "npm-run-all": "^4.1.0",
+    "prettier": "^1.14.0",
+    "react-test-renderer": "^16.5.0",
+    "shx": "^0.3.0",
+    "ts-jest": "^23.10.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.0",
+    "webpack-bundle-analyzer": "^2.0.0"
+  }
+}
