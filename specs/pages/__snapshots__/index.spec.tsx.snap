@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Index page should render correctly 1`] = `
+Array [
+  <h1>
+    title
+  </h1>,
+  <p>
+    A sitereated by Gatsby
+  </p>,
+]
+`;
+
+exports[`Index page should render correctly 2`] = `
+<p>
+  A sitereated by Gatsby
+</p>
+`;
