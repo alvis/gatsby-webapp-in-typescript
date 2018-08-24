@@ -16,7 +16,7 @@
  * -------------------------------------------------------------------------
  */
 
-// import * as Config from '#definitions/gatsby/config';
+import * as Config from '#definitions/gatsby/config';
 
 // export const siteMetadata: Config.siteMetadata = {};
 
@@ -31,3 +31,12 @@
 // export const proxy: Config.proxy = {};
 
 // export const developMiddleware: Config.developMiddleware = middleware => {};
+
+export const siteMetadata: Config.siteMetadata = {
+  title: `Hello World`,
+  siteUrl: `https://hello.world`,
+};
+
+export const plugins: Config.Plugins = [
+  `gatsby-plugin-typescript`, // enable typescript
+];
