@@ -1,0 +1,119 @@
+key-dependencies: &key-dependencies
+  key: dependencies-{{ checksum "package.json" }}-node-{{ checksum "/usr/local/bin/node" }}
+key-source: &key-source
+  key: source-{{ .Revision }}
+key-package: &key-package
+  key: package-{{ .Revision }}
+builder: &builder
+  docker:
+    - image: circleci/node:latest
+
+version: 2
+jobs:
+  checkout:
+    <<: *builder
+    working_directory: /tmp/source
+    steps:
+      - checkout
+      - run:
+          name: Triggering Missed Builds
+          command: ./.circleci/trigger
+      - save_cache:
+          <<: *key-source
+          paths:
+            - ./
+      - restore_cache:
+          <<: *key-dependencies
+      - run:
+          name: Installing Dependencies
+          command: npm install --ignore-scripts
+      - save_cache:
+          <<: *key-dependencies
+          paths:
+            - node_modules
+  build:
+    <<: *builder
+    working_directory: /tmp/source
+    steps:
+      - restore_cache:
+          <<: *key-source
+      - restore_cache:
+          <<: *key-dependencies
+      - run:
+          name: Building Code
+          command: npm run build
+      - save_cache:
+          <<: *key-package
+          paths:
+            - public
+  lint:
+    <<: *builder
+    working_directory: /tmp/source
+    steps:
+      - restore_cache:
+          <<: *key-source
+      - restore_cache:
+          <<: *key-dependencies
+      - run:
+          name: Checking Code Style
+          command: npm run lint
+  test:
+    docker:
+      - image: node:latest
+    working_directory: /tmp/source
+    steps:
+      - restore_cache:
+          <<: *key-source
+      - restore_cache:
+          <<: *key-package
+      - restore_cache:
+          <<: *key-dependencies
+      - run:
+          name: Testing Components
+          command: npm test
+  deploy:
+    docker:
+      - image: node:latest
+    working_directory: /tmp/source
+    steps:
+      - restore_cache:
+          <<: *key-source
+      - restore_cache:
+          <<: *key-package
+      - restore_cache:
+          <<: *key-dependencies
+      - run:
+          name: Deploying to Github
+          command: |
+            npm -g config set user root
+            npm install -g gh-pages
+            mkdir ~/.ssh
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            git config --global user.email "circleci@hilbert.space"
+            git config --global user.name "Circle CI"
+            echo $CNAME > public/CNAME
+            gh-pages --dist public --message "ci: commit build of $(git rev-parse --short HEAD)"
+      - run:
+          name: Deploying to Firebase
+          command: |
+            npm -g config set user root
+            npm install -g firebase-tools
+            firebase deploy --only hosting --token "$FIREBASE_TOKEN"
+workflows:
+  version: 2
+  flow:
+    jobs:
+      - checkout
+      - build:
+          requires:
+            - checkout
+      - lint:
+          requires:
+            - checkout
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - lint
+            - test
