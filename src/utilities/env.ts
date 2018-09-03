@@ -5,12 +5,21 @@
  * See the LICENSE file for details.
  * -------------------------------------------------------------------------
  *
- * @summary   A collection of helper functions.
+ * @summary   Helper functions related to environment variables.
  *
  * @author    Alvis HT Tang <alvis@hilbert.space>
  * @license   MIT
  * @copyright Copyright (c) 2018 - All Rights Reserved.
  * -------------------------------------------------------------------------
  */
+export const env = new Proxy(process.env, {
+  get: (env, key: string): string => {
+    const value = env[key];
 
-export * from './env';
+    if (value !== undefined) {
+      return value;
+    } else {
+      throw new Error(`Environment variable '${key}' is missing`);
+    }
+  }
+}) as Record<string, string>;
