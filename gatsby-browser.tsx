@@ -16,9 +16,19 @@
  * -------------------------------------------------------------------------
  */
 
-// import React, { ReactNode } from 'react';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
-// import Browser from '#definitions/gatsby/browser';
+import createStore from '#redux';
+
+import Browser from '#definitions/gatsby/browser';
+
+interface ReduxWindow extends Window {
+  __REDUX_DEVTOOLS_EXTENSION__?: any;
+}
+
+declare var window: ReduxWindow;
 
 // export const disableCorePrefetching: Browser.disableCorePrefetching = (): boolean => {};
 
@@ -42,5 +52,26 @@
 
 // export const shouldUpdateScroll: Browser.shouldUpdateScroll = (parameters): void => {};
 
-// export const wrapPageElement: Browser.wrapPageElement = (parameters): JSX.Element => {};
 // export const wrapRootElement: Browser.wrapRootElement = (parameters): JSX.Element => {};
+// export const wrapRootComponent: Browser.wrapRootComponent = (parameters): JSX.Element => {};
+
+export const wrapRootElement: Browser.wrapRootElement = ({
+  element,
+}): JSX.Element => {
+  const middlewares: any[] = [];
+
+  // add a middleware for the Redux DevTool Extension
+  if (window.__REDUX_DEVTOOLS_EXTENSION__) {
+    middlewares.push(window.__REDUX_DEVTOOLS_EXTENSION__());
+  }
+
+  const { store, persistor } = createStore(...middlewares);
+
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        {element}
+      </PersistGate>
+    </Provider>
+  );
+};

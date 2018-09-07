@@ -33,6 +33,8 @@
       "#definitions/*": ["definitions/*"],
       "#layouts/*": ["layouts/*"],
       "#pages/*": ["pages/*"],
+      "#redux": ["redux"],
+      "#redux/*": ["redux/*"],
       "#style": ["style"],
       "#style/*": ["style/*"],
       "#utilities": ["utilities"],

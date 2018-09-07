@@ -17,7 +17,14 @@
  * -------------------------------------------------------------------------
  */
 
-// import SSR from '#definitions/gatsby/ssr';
+import React from 'react';
+
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import createStore from '#redux';
+
+import SSR from '#definitions/gatsby/ssr';
 
 // export const onPreRenderHTML: SSR.onPreRenderHTML = (parameters): void => {};
 // export const onRenderBody: SSR.onRenderBody = (parameters): void => {};
@@ -26,3 +33,17 @@
 
 // export const wrapPageElement: SSR.wrapPageElement = (parameters): JSX.Element => {};
 // export const wrapRootElement: SSR.wrapRootElement = (parameters): JSX.Element => {};
+
+export const wrapRootElement: SSR.wrapRootElement = ({
+  element,
+}): JSX.Element => {
+  const { store, persistor } = createStore();
+
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        {element}
+      </PersistGate>
+    </Provider>
+  );
+};
