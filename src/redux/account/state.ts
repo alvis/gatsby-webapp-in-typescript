@@ -5,7 +5,7 @@
  * See the LICENSE file for details.
  * -------------------------------------------------------------------------
  *
- * @summary   Global state.
+ * @summary   State for account management.
  *
  * @author    Alvis HT Tang <alvis@hilbert.space>
  * @license   MIT
@@ -24,7 +24,7 @@ export interface State {
 
 export const initialState: State = {
   isAuthenticated: false,
-  profile: null,
+  profile: null
 };
 
 // ---------------------------------------- //

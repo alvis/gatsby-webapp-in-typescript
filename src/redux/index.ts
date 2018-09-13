@@ -13,6 +13,8 @@
  * -------------------------------------------------------------------------
  */
 
+import * as account from './account';
+
 /* ----- Action ----- */
 
 import * as actions from './actions';
@@ -20,7 +22,9 @@ export { actions };
 
 import { ActionType } from 'typesafe-actions';
 
-type AppAction = NonNullable<ActionType<typeof actions>>;
+type AppAction = NonNullable<
+  ActionType<typeof actions> | ActionType<typeof account.actions>
+>;
 
 export type Action = AppAction;
 
@@ -28,7 +32,9 @@ export type Action = AppAction;
 
 /* ----- State ----- */
 
-export interface State {}
+export interface State {
+  account: account.State;
+}
 
 // ---------------------------------------- //
 
@@ -36,7 +42,9 @@ export interface State {}
 
 import { combineReducers } from 'redux';
 
-export const rootReducer = combineReducers<State, Action>({});
+export const rootReducer = combineReducers<State, Action>({
+  account: account.reducers,
+});
 
 // ---------------------------------------- //
 
@@ -81,6 +89,7 @@ export default function prepareStore(
 
   // combine other middlewares
   const combinedEnhancer = compose<StoreEnhancerStoreCreator>(
+    account.enhancer(),
     ...internalEnhancers,
     // external enhancers
     ...enhancers
