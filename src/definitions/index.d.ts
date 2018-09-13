@@ -12,3 +12,7 @@
  * @copyright Copyright (c) 2018 - All Rights Reserved.
  * -------------------------------------------------------------------------
  */
+
+export type Redirection<Context extends object | undefined = undefined> = {
+  path: string;
+} & (Context extends undefined ? {} : { context: Context });
